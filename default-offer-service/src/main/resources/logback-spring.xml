@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+	<!-- Define Properties -->
+	<!-- All possible levels TRACE, DEBUG, INFO, WARN, ERROR and OFF-->
+	<springProperty scope="context" name="appName" source="spring.application.name" defaultValue="undefined"/>
+	<property name="log.pattern" value="%d{MM/dd/yyyy-HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg %n" />
+	<property name="log.history" value="10" />
+	<property name="log.folder" value="C:/Safikur/dae/logs" />
+	<property name="log.file.prefix" value="${log.folder}/${appName}" />
+        
+	<!-- Define Error File Appender -->
+	<appender name="errorFileAppender"	class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log.file.prefix}Error.log</File>
+		
+		<!-- Allow ONLY ERROR logs using Threshold filter -->
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>${log.file.prefix}Error.%i.log</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>${log.history}</MaxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+           	<MaxFileSize>10MB</MaxFileSize>
+       	</triggeringPolicy>		
+
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- Define Trace file Appender -->
+	<appender name="traceFileAppender"	class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log.file.prefix}Trace.log</File>
+		
+		<!-- Block ERROR logs using Level filter-->
+   		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+      		<level>ERROR</level>
+      		<onMatch>DENY</onMatch>
+      		<onMismatch>ACCEPT</onMismatch>
+    	</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>${log.file.prefix}Trace.%i.log</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>${log.history}</MaxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+           	<MaxFileSize>10MB</MaxFileSize>
+       	</triggeringPolicy>		
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+		</encoder>
+	</appender>	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+	    <encoder>
+	     	<pattern>${log.pattern}</pattern>
+	    </encoder>
+  	</appender>
+	<root level="${logging.level:-INFO}">
+		<appender-ref ref="traceFileAppender" />
+		<appender-ref ref="errorFileAppender" />
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

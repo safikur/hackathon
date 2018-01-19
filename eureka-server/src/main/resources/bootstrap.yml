@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: eureka-server
+  profiles:
+    active: local
+
+eureka:
+  instance:
+    lease-expiration-duration-in-seconds: 12
+    hostname: localhost
+    lease-renewal-interval-in-seconds: 5
+    appname: ${spring.application.name}
+    metadata-map:
+      management.context-path: /manage
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    initial-instance-info-replication-interval-seconds: 5
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/

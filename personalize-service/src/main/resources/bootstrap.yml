@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: personalize-service
+  profiles:
+     active: local
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka/
+    
+management:
+  security:
+    enabled: false

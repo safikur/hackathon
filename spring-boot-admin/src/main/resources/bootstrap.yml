@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: spring-boot-admin
+  profiles:
+     active: local
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+  boot:
+    admin:
+      context-path: /admin
+      routes:
+        endpoints: "env,metrics,dump,jolokia,info,configprops,trace,logfile,refresh,flyway,liquibase,heapdump,loggers,auditevents,hystrix.stream"
+      notify:
+        mail:
+          enabled: true
+          to: safikurrahaman.khan@walgreens.com
+          from: no-reply@walgreens.com
+          ignore-changes:
+          - "UNKNOWN:UP"
+          subject: "(${spring.profiles.active}): #{application.name} (#{application.id}) is #{to.status}" 
+
+  mail:
+    host: javasmtp.walgreens.com
+
+#discovery server
+eureka:
+  instance:
+    lease-expiration-duration-in-seconds: 10
+  client:
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://localhost:7001/eureka/
+
+info:
+  build:
+    application: My Wag Value
+    artifact: spring-boot-admin
+    description: Application to manage and monitor spring boot applications
+    version: ${version} 

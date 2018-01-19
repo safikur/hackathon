@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: gateway-service
+  profiles:
+     active: local
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka/
+    
+zuul:
+  ignored-services: '*'
+  prefix: /api
+  routes:
+#    book:
+#      path: /book/**
+#      service-id: book-service
+#    hello:
+#      path: /hello/**
+#      service-id: hello-service
+    personalize:
+      path: /personalize/**
+      service-id: personalize-service
+  retryable: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000    
+  
+management:
+  security:
+    enabled: false
+  
